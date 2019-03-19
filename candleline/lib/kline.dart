@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:candleline/bloc/kline_bloc.dart';
 import 'package:candleline/common/bloc_provider.dart';
-
+import 'package:candleline/model/model.dart';
 class KlinePage extends StatefulWidget {
   KlinePage({Key key}) : super(key: key);
   @override
@@ -24,11 +24,11 @@ class _KlinePageState extends State<KlinePage> {
         child: StreamBuilder(
             stream: klineBloc.outklineList,
             builder:
-                (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-              List<String> tmpList = snapshot.data ?? ['无数据'];
+                (BuildContext context, AsyncSnapshot<List<Market>> snapshot) {
+              List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0)];
               String listString = '';
-              for (var string in tmpList) {
-                listString = listString + string;
+              for (Market market in tmpList) {
+                listString = listString + market.open.toString();
               }
               return Center(
                 child: 
