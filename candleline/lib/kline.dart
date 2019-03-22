@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:candleline/bloc/kline_bloc.dart';
 import 'package:candleline/common/bloc_provider.dart';
 import 'package:candleline/model/model.dart';
+import 'package:candleline/view/KlineSingleView.dart';
+import 'package:rxdart/rxdart.dart';
+
 class KlinePage extends StatefulWidget {
   KlinePage({Key key}) : super(key: key);
   @override
@@ -10,10 +13,14 @@ class KlinePage extends StatefulWidget {
 
 class _KlinePageState extends State<KlinePage> {
   KlineBloc klineBloc = KlineBloc();
+  Offset lastPoint;
+  int offset;
+  double lastScale;
+  int count;
+
 
   @override
   Widget build(BuildContext context) {
-    // klineBloc = BlocProvider.of<KlineBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('kline'),
@@ -21,22 +28,58 @@ class _KlinePageState extends State<KlinePage> {
       body: BlocProvider<KlineBloc>(
         //key: PageStorageKey('market'),
         bloc: klineBloc,
-        child: StreamBuilder(
-            stream: klineBloc.outklineList,
-            builder:
-                (BuildContext context, AsyncSnapshot<List<Market>> snapshot) {
-              List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0)];
-              String listString = '';
-              for (Market market in tmpList) {
-                listString = listString + market.open.toString();
+        child: GestureDetector(
+          //开始拖动
+          onHorizontalDragStart: (details) {
+            lastPoint = details.globalPosition;
+
+          },
+          //结束拖动
+          onHorizontalDragUpdate: (details){
+
+            int num = ((details.globalPosition.dx - lastPoint.dx) / klineBloc.rectWidth).toInt();
+            print(details.globalPosition.dx - lastPoint.dx);
+            if (num == offset) {
+              return;
+            }
+            print(num);
+
+            if (klineBloc.stringList.length > 1) {
+              int currentIndex = klineBloc.currentIndex - num;
+              if (currentIndex <= 0) {
+                return;
               }
-              return Center(
-                child: 
-                Text('数据:' + listString)
-                );
-            }),
+              if (currentIndex > klineBloc.stringList.length - count) {
+                return;
+              }
+              lastPoint = details.globalPosition;
+              klineBloc.getSubKlineList(currentIndex, currentIndex + count);
+              klineBloc.currentIndex = currentIndex;
+              offset = num;
+            }
+          },
+          onScaleUpdate: (details) {
+            double scale = details.scale;
+            if (scale == 1.0) {
+              return ;
+            }
+            print(details.scale);
+            lastScale = details.scale;
+            double rectWidth = scale * 7.0;
+            klineBloc.setRectWidth(rectWidth);
+          },
+
+          child: StreamBuilder(
+              stream: klineBloc.outRectWidth,
+              builder:
+                  (BuildContext context, AsyncSnapshot<double> snapshot) {
+                double rectWidth = snapshot.data ?? 7.0;
+                count = (MediaQuery.of(context).size.width / klineBloc.rectWidth).toInt();
+                return KlineSingleView();
+
+              })
+        )
       ),
-      
     );
   }
 }
