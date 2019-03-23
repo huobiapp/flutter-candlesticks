@@ -38,14 +38,14 @@ class KlineSingleViewState extends State<KlineSingleView> {
               children: <Widget>[
                 Expanded(
                   child: Container(
-                    color: Colors.grey,
+                    color: Colors.black,
                     child: KlineCandleView(),
                   ),
-                  flex: 8,
+                  flex: 20,
                 ),
                 Expanded(
                   child: Container(
-                    color: Colors.white,
+                    color: Colors.grey,
 //                    child: KlineCandleView(),
                   ),
                   flex: 1,
