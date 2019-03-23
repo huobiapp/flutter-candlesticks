@@ -17,6 +17,8 @@ class _KlinePageState extends State<KlinePage> {
   int offset;
   double lastScale;
   int count;
+  double currentRectWidth;
+  bool isScale = false;
 
 
   @override
@@ -38,11 +40,11 @@ class _KlinePageState extends State<KlinePage> {
           onHorizontalDragUpdate: (details){
 
             int num = ((details.globalPosition.dx - lastPoint.dx) / klineBloc.rectWidth).toInt();
-            print(details.globalPosition.dx - lastPoint.dx);
-            if (num == offset) {
+//            print(details.globalPosition.dx - lastPoint.dx);
+            if (num == offset || isScale) {
               return;
             }
-            print(num);
+//            print(num);
 
             if (klineBloc.stringList.length > 1) {
               int currentIndex = klineBloc.currentIndex - num;
@@ -58,6 +60,11 @@ class _KlinePageState extends State<KlinePage> {
               offset = num;
             }
           },
+
+          onScaleStart: (details) {
+            currentRectWidth = klineBloc.rectWidth;
+            isScale = true;
+          },
           onScaleUpdate: (details) {
             double scale = details.scale;
             if (scale == 1.0) {
@@ -65,8 +72,11 @@ class _KlinePageState extends State<KlinePage> {
             }
             print(details.scale);
             lastScale = details.scale;
-            double rectWidth = scale * 7.0;
+            double rectWidth = scale * currentRectWidth;
             klineBloc.setRectWidth(rectWidth);
+          },
+          onScaleEnd: (details) {
+            isScale = false;
           },
 
           child: StreamBuilder(

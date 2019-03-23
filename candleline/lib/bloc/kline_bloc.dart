@@ -71,7 +71,7 @@ class KlineBloc extends BlocBase {
     _inCurrentKlineList.add(klineList);
   }
   void setRectWidth(double width) {
-    if (width > 16.0 || width < 1.0) {
+    if (width > 25.0 || width < 1.0) {
       return;
     }
     rectWidth = width;
