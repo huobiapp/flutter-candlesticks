@@ -34,7 +34,9 @@ class KlineSingleView extends StatelessWidget {
                 fit: StackFit.expand,
                 children: <Widget>[
                   KlineCandleView(),
-                  KlineSolideView(),
+                  KlineSolideView(type: 0),
+                  KlineSolideView(type: 1),
+                  KlineSolideView(type: 2)
                 ],
               ),
             );
@@ -46,7 +48,7 @@ class KlineSingleView extends StatelessWidget {
                 fit: StackFit.expand,
                 children: <Widget>[
                   KlineColumnarView(),
-                  KlineSolideView(),
+//                  KlineSolideView(),
                 ],
               ),
             );

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'dart:async' show Future;
 import 'dart:convert';
 import 'package:candleline/model/model.dart';
-import 'package:flutter/material.dart';
+import 'package:candleline/manager/KlineDataCalculateManager.dart';
 
 class KlineBloc extends BlocBase {
   BehaviorSubject<List<Market>> _klineListController =
@@ -53,6 +53,8 @@ class KlineBloc extends BlocBase {
       final parseJson = json.decode(value);
       MarketData marketData = MarketData.fromJson(parseJson);
       stringList.addAll(marketData.data);
+      //计算Ma均线
+      stringList = KlineDataCalculateManager.calculateKlineData(ChartType.MA, stringList);
       _inklineList.add(stringList);
     });
   }

@@ -9,6 +9,14 @@ class Market{
   double low;
   double close;
   double volumeto;
+
+  //指标线数据
+  double priceMa1;
+  double priceMa2;
+  double priceMa3;
+  double volMa1;
+  double volMa2;
+
   //不同的类使用不同的mixin即可
   factory Market.fromJson(Map<String, dynamic> json) => _$MarketFromJson(json);
   Map<String, dynamic> toJson() => _$MarketToJson(this);
@@ -18,10 +26,6 @@ class MarketData {
   MarketData(this.data);
   @JsonKey(name: 'data')
   List<Market> data;
-
-
-
-
   factory MarketData.fromJson(Map<String, dynamic> json) => _$MarketDataFromJson(json);
   Map<String, dynamic> toJson() => _$MarketDataToJson(this);
 }
