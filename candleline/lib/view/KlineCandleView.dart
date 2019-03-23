@@ -4,22 +4,11 @@ import 'package:candleline/common/bloc_provider.dart';
 import 'package:candleline/model/model.dart';
 import 'package:flutter/foundation.dart';
 
-class KlineCandleView extends StatefulWidget {
-
-  @override
-  KlineCandleViewState createState() => KlineCandleViewState();
-}
-
-class KlineCandleViewState extends State<KlineCandleView> {
-  KlineBloc klineBloc;
-  @override
-  void initState() {
-    klineBloc = BlocProvider.of<KlineBloc>(context);
-    super.initState();
-  }
+class KlineCandleView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    KlineBloc  klineBloc = BlocProvider.of<KlineBloc>(context);
     return StreamBuilder(
         stream: klineBloc.outCurrentKlineList,
         builder:
@@ -30,14 +19,14 @@ class KlineCandleViewState extends State<KlineCandleView> {
             listString = listString + market.open.toString();
           }
           return CustomPaint(
-            size: Size.infinite,
-            painter: _CandleViewPainter(
-              data:tmpList,
-              lineWidth: 1,
-              rectWidth: klineBloc.rectWidth,
-              increaseColor: Colors.red,
-              decreaseColor: Colors.green
-            )
+              size: Size.infinite,
+              painter: _CandleViewPainter(
+                  data:tmpList,
+                  lineWidth: 1,
+                  rectWidth: klineBloc.rectWidth,
+                  increaseColor: Colors.red,
+                  decreaseColor: Colors.green
+              )
           );
         });
   }

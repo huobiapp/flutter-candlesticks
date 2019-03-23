@@ -4,34 +4,18 @@ import 'package:candleline/common/bloc_provider.dart';
 import 'package:candleline/model/model.dart';
 import 'package:flutter/foundation.dart';
 
-class KlineColumnarView extends StatefulWidget {
-
-  @override
-  KlineColumnarViewState createState() => KlineColumnarViewState();
-}
-
-class KlineColumnarViewState extends State<KlineColumnarView> {
-  KlineBloc klineBloc;
-  @override
-  void initState() {
-    klineBloc = BlocProvider.of<KlineBloc>(context);
-    super.initState();
-  }
-
+class KlineColumnarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    KlineBloc klineBloc = BlocProvider.of<KlineBloc>(context);
     return StreamBuilder(
         stream: klineBloc.outCurrentKlineList,
         builder:
             (BuildContext context, AsyncSnapshot<List<Market>> snapshot) {
           List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0)];
-          String listString = '';
-          for (Market market in tmpList) {
-            listString = listString + market.open.toString();
-          }
           return CustomPaint(
               size: Size.infinite,
-              painter: _CandleViewPainter(
+              painter: _ColumnarViewPainter(
                   data:tmpList,
                   lineWidth: 1,
                   rectWidth: klineBloc.rectWidth,
@@ -43,8 +27,8 @@ class KlineColumnarViewState extends State<KlineColumnarView> {
   }
 }
 
-class _CandleViewPainter extends CustomPainter {
-  _CandleViewPainter({
+class _ColumnarViewPainter extends CustomPainter {
+  _ColumnarViewPainter({
     Key key,
     @required this.data,
     this.lineWidth = 1.0,
@@ -111,7 +95,7 @@ class _CandleViewPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_CandleViewPainter old) {
+  bool shouldRepaint(_ColumnarViewPainter old) {
     return true;
   }
 

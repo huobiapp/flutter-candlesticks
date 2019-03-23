@@ -4,62 +4,53 @@ import 'package:candleline/common/bloc_provider.dart';
 import 'package:candleline/model/model.dart';
 import 'package:candleline/view/KlineCandleView.dart';
 import 'package:candleline/view/KlineColumnarView.dart';
-class KlineSingleView extends StatefulWidget {
+import 'package:candleline/view/KlineSolideView.dart';
 
-  @override
-  KlineSingleViewState createState() => KlineSingleViewState();
-}
-
-class KlineSingleViewState extends State<KlineSingleView> {
-  KlineBloc klineBloc;
-  @override
-  void initState() {
-    klineBloc = BlocProvider.of<KlineBloc>(context);
-    super.initState();
-  }
+class KlineSingleView extends StatelessWidget {
+  KlineSingleView({
+    Key key,
+    @required this.type,
+  });
+  int type = 0;
 
   @override
   Widget build(BuildContext context) {
+    KlineBloc klineBloc = BlocProvider.of<KlineBloc>(context);
     return StreamBuilder(
         stream: klineBloc.outklineList,
-        builder:
-            (BuildContext context, AsyncSnapshot<List<Market>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<Market>> snapshot) {
           List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0)];
           if (tmpList.length > 1) {
-            double count = MediaQuery.of(context).size.width / klineBloc.rectWidth;
+            double count =
+                MediaQuery.of(context).size.width / klineBloc.rectWidth;
             int num = count.toInt();
             klineBloc.getSubKlineList(0, num);
           }
-          return Container(
-            margin: EdgeInsets.only(top: 50),
-            height: 600,
-            color: Colors.black,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    color: Colors.black,
-                    child: KlineCandleView(),
-                  ),
-                  flex: 20,
-                ),
-                Expanded(
-                  child: Container(
-                    color: Colors.grey,
-//                    child: KlineCandleView(),
-                  ),
-                  flex: 1,
-                ),
-                Expanded(
-                  child: Container(
-                    color: Colors.black,
-                    child: KlineColumnarView(),
-                  ),
-                  flex: 4,
-                ),
-              ],
-            ),
-          );
+          if (type == 0) {
+            return Container(
+              color: Colors.black,
+              child: Stack(
+                alignment: Alignment.center,
+                fit: StackFit.expand,
+                children: <Widget>[
+                  KlineCandleView(),
+                  KlineSolideView(),
+                ],
+              ),
+            );
+          } else {
+            return Container(
+              color: Colors.black,
+              child: Stack(
+                alignment: Alignment.center,
+                fit: StackFit.expand,
+                children: <Widget>[
+                  KlineColumnarView(),
+                  KlineSolideView(),
+                ],
+              ),
+            );
+          }
         });
   }
 }

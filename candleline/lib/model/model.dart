@@ -18,6 +18,10 @@ class MarketData {
   MarketData(this.data);
   @JsonKey(name: 'data')
   List<Market> data;
+
+
+
+
   factory MarketData.fromJson(Map<String, dynamic> json) => _$MarketDataFromJson(json);
   Map<String, dynamic> toJson() => _$MarketDataToJson(this);
 }
