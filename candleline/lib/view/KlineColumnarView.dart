@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:candleline/bloc/kline_bloc.dart';
-import 'package:candleline/common/bloc_provider.dart';
+import 'package:candleline/bloc/KlineBloc.dart';
+import 'package:candleline/common/BlocProvider.dart';
 import 'package:candleline/model/model.dart';
 import 'package:flutter/foundation.dart';
 
@@ -18,6 +18,7 @@ class KlineColumnarView extends StatelessWidget {
               painter: _ColumnarViewPainter(
                   data:tmpList,
                   lineWidth: 1,
+                  max: klineBloc.volumeMax,
                   rectWidth: klineBloc.rectWidth,
                   increaseColor: Colors.red,
                   decreaseColor: Colors.green
@@ -31,6 +32,7 @@ class _ColumnarViewPainter extends CustomPainter {
   _ColumnarViewPainter({
     Key key,
     @required this.data,
+    @required this.max,
     this.lineWidth = 1.0,
     this.rectWidth = 7.0,
     this.increaseColor = Colors.red,
@@ -42,26 +44,16 @@ class _ColumnarViewPainter extends CustomPainter {
   final double rectWidth;
   final Color increaseColor;
   final Color decreaseColor;
-  double _max;
-
-  update() {
-    _max = -double.infinity;
-    for (var i in data) {
-      if (i.volumeto > _max) {
-        _max = i.volumeto;
-      }
-    }
-  }
+  final double max;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (_max == null) {
-      update();
+    if (max == null ) {
+      return;
     }
-
     double height = size.height;
 
-    final double heightNormalizer = height / (_max);
+    final double heightNormalizer = height / (max);
 
     double rectLeft;
     double rectTop;
@@ -96,7 +88,7 @@ class _ColumnarViewPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_ColumnarViewPainter old) {
-    return true;
+    return data != null;
   }
 
 }

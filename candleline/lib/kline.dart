@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:candleline/bloc/kline_bloc.dart';
-import 'package:candleline/common/bloc_provider.dart';
+import 'package:candleline/bloc/KlineBloc.dart';
+import 'package:candleline/common/BlocProvider.dart';
 import 'package:candleline/model/model.dart';
 import 'package:candleline/view/KlineSingleView.dart';
 import 'package:rxdart/rxdart.dart';
 
 class KlinePage extends StatefulWidget {
   KlinePage({Key key}) : super(key: key);
+
   @override
   _KlinePageState createState() => _KlinePageState();
 }
@@ -33,6 +34,9 @@ class _KlinePageState extends State<KlinePage> {
               //开始拖动
               onHorizontalDragStart: (details) {
                 lastPoint = details.globalPosition;
+                count =
+                    (MediaQuery.of(context).size.width / klineBloc.rectWidth)
+                        .toInt();
               },
               //结束拖动
               onHorizontalDragUpdate: (details) {
@@ -40,14 +44,14 @@ class _KlinePageState extends State<KlinePage> {
                         klineBloc.rectWidth)
                     .toInt();
 //            print(details.globalPosition.dx - lastPoint.dx);
-                if (num == offset || isScale) {
+                if (isScale) {
                   return;
                 }
 //            print(num);
 
                 if (klineBloc.stringList.length > 1) {
                   int currentIndex = klineBloc.currentIndex - num;
-                  if (currentIndex <= 0) {
+                  if (currentIndex < 0) {
                     return;
                   }
                   if (currentIndex > klineBloc.stringList.length - count) {
@@ -71,41 +75,56 @@ class _KlinePageState extends State<KlinePage> {
                 print(details.scale);
                 lastScale = details.scale;
                 double rectWidth = scale * currentRectWidth;
+                count =
+                    (MediaQuery.of(context).size.width / klineBloc.rectWidth)
+                        .toInt();
                 klineBloc.setRectWidth(rectWidth);
+                klineBloc.getSubKlineList(
+                    klineBloc.currentIndex, klineBloc.currentIndex + count);
               },
               onScaleEnd: (details) {
                 isScale = false;
               },
               child: StreamBuilder(
-                  stream: klineBloc.outRectWidth,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<double> snapshot) {
-                    double rectWidth = snapshot.data ?? 7.0;
-                    count = (MediaQuery.of(context).size.width /
-                            klineBloc.rectWidth)
-                        .toInt();
-                    return Container(
-                      margin: EdgeInsets.only(top: 10,bottom: 20),
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              color: Colors.black,
-                              child: KlineSingleView(type: 0),
+                  stream: klineBloc.outklineList,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Market>> snapshot) {
+                    List<Market> data = snapshot.data;
+                    if (data != null && klineBloc.klineList.length == 0) {
+                      double width = MediaQuery.of(context).size.width;
+                      klineBloc.setScreenWith(width);
+                    }
+                      return Container(
+                        margin: EdgeInsets.only(top: 10, bottom: 20),
+                        child: Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                color: Colors.black,
+                                child: KlineSingleView(type: 0),
+                              ),
+                              flex: 20,
                             ),
-                            flex: 20,
-                          ),
-                          Expanded(
-                            child: Container(
-                              color: Colors.black,
-                              child: KlineSingleView(type: 1),
+                            Expanded(
+                              child: Container(
+                                color: Colors.black,
+                              ),
+                              flex: 1,
                             ),
-                            flex: 4,
-                          ),
-                        ],
-                      ),
-                    );
-                  }))),
+                            Expanded(
+                              child: Container(
+                                color: Colors.black,
+                                child: KlineSingleView(type: 1),
+                              ),
+                              flex: 4,
+                            ),
+                          ],
+                        ),
+                      );
+                  }
+                  )
+                  )
+                  ),
     );
   }
 }

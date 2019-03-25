@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:candleline/model/model.dart';
-import 'package:candleline/bloc/kline_bloc.dart';
+import 'package:candleline/bloc/KlineBloc.dart';
 
 enum ChartType {
   UnKnow,
