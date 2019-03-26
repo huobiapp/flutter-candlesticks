@@ -51,7 +51,7 @@ class _ColumnarViewPainter extends CustomPainter {
     if (max == null ) {
       return;
     }
-    double height = size.height;
+    double height = size.height - 20;
 
     final double heightNormalizer = height / (max);
 
@@ -77,8 +77,8 @@ class _ColumnarViewPainter extends CustomPainter {
       }
 
       // Draw candlestick if decrease
-      rectTop = height - (data[i].volumeto) * heightNormalizer;
-      rectBottom = height;
+      rectTop = height - (data[i].volumeto) * heightNormalizer + 20;
+      rectBottom = height + 20;
       Rect ocRect =
       new Rect.fromLTRB(rectLeft, rectTop, rectRight, rectBottom);
       canvas.drawRect(ocRect, rectPaint);

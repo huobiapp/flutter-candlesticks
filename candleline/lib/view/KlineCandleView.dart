@@ -57,7 +57,7 @@ class _CandleViewPainter extends CustomPainter {
     }
 
     double width = size.width;
-    double height = size.height;
+    double height = size.height - 20;
 
     final double heightNormalizer = height / (max - min);
 
@@ -83,15 +83,15 @@ class _CandleViewPainter extends CustomPainter {
       }
 
       // Draw candlestick if decrease
-      rectTop = height - (data[i].open - min) * heightNormalizer;
-      rectBottom = height - (data[i].close - min) * heightNormalizer;
+      rectTop = height - (data[i].open - min) * heightNormalizer + 20;
+      rectBottom = height - (data[i].close - min) * heightNormalizer + 20;
       Rect ocRect =
       new Rect.fromLTRB(rectLeft, rectTop, rectRight, rectBottom);
       canvas.drawRect(ocRect, rectPaint);
 
       // Draw low/high candlestick wicks
-      double low = height - (data[i].low - min) * heightNormalizer;
-      double high = height - (data[i].high - min) * heightNormalizer;
+      double low = height - (data[i].low - min) * heightNormalizer + 20;
+      double high = height - (data[i].high - min) * heightNormalizer + 20;
       canvas.drawLine(
           new Offset(rectLeft + rectWidth / 2 - lineWidth / 2, rectBottom),
           new Offset(rectLeft + rectWidth / 2 - lineWidth / 2, low),

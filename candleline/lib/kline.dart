@@ -12,7 +12,8 @@ class KlinePage extends StatefulWidget {
   _KlinePageState createState() => _KlinePageState();
 }
 
-class _KlinePageState extends State<KlinePage> {
+class _KlinePageState extends State<KlinePage>
+    with SingleTickerProviderStateMixin {
   KlineBloc klineBloc = KlineBloc();
   Offset lastPoint;
   int offset;
@@ -20,6 +21,24 @@ class _KlinePageState extends State<KlinePage> {
   int count;
   double currentRectWidth;
   bool isScale = false;
+
+  // ==== 负责惯性滑动动画
+  AnimationController controller;
+  Animation<int> animation;
+  Function listener;
+
+  @override
+  void initState() {
+    controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,19 +54,23 @@ class _KlinePageState extends State<KlinePage> {
               onHorizontalDragStart: (details) {
                 lastPoint = details.globalPosition;
                 count =
-                    (MediaQuery.of(context).size.width / klineBloc.rectWidth)
+                    (MediaQuery.of(context).size.width ~/ klineBloc.rectWidth)
                         .toInt();
               },
               //结束拖动
               onHorizontalDragUpdate: (details) {
-                int num = ((details.globalPosition.dx - lastPoint.dx) /
+                double offsetX = details.globalPosition.dx - lastPoint.dx;
+                int num = (offsetX ~/
                         klineBloc.rectWidth)
                     .toInt();
 //            print(details.globalPosition.dx - lastPoint.dx);
-                if (isScale) {
+                if (isScale /*|| num == offset*/) {
                   return;
                 }
-//            print(num);
+                if (num == 0) {
+                  return;
+                }
+           print(num);
 
                 if (klineBloc.stringList.length > 1) {
                   int currentIndex = klineBloc.currentIndex - num;
@@ -63,6 +86,13 @@ class _KlinePageState extends State<KlinePage> {
                   offset = num;
                 }
               },
+              onHorizontalDragEnd: (details) {
+                // if(offset > 0) {
+                //   _fling(4);
+                // } else {
+                //   _fling(-4);
+                // }
+              },
               onScaleStart: (details) {
                 currentRectWidth = klineBloc.rectWidth;
                 isScale = true;
@@ -76,7 +106,7 @@ class _KlinePageState extends State<KlinePage> {
                 lastScale = details.scale;
                 double rectWidth = scale * currentRectWidth;
                 count =
-                    (MediaQuery.of(context).size.width / klineBloc.rectWidth)
+                    (MediaQuery.of(context).size.width ~/ klineBloc.rectWidth)
                         .toInt();
                 klineBloc.setRectWidth(rectWidth);
                 klineBloc.getSubKlineList(
@@ -94,37 +124,69 @@ class _KlinePageState extends State<KlinePage> {
                       double width = MediaQuery.of(context).size.width;
                       klineBloc.setScreenWith(width);
                     }
-                      return Container(
-                        margin: EdgeInsets.only(top: 10, bottom: 20),
-                        child: Column(
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                color: Colors.black,
-                                child: KlineSingleView(type: 0),
-                              ),
-                              flex: 20,
+                    return Container(
+                      margin: EdgeInsets.only(top: 10, bottom: 20),
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              color: Colors.black,
+                              child: KlineSingleView(type: 0),
                             ),
-                            Expanded(
-                              child: Container(
-                                color: Colors.black,
-                              ),
-                              flex: 1,
+                            flex: 20,
+                          ),
+                          Expanded(
+                            child: Container(
+                              color: Colors.black,
                             ),
-                            Expanded(
-                              child: Container(
-                                color: Colors.black,
-                                child: KlineSingleView(type: 1),
-                              ),
-                              flex: 4,
+                            flex: 1,
+                          ),
+                          Expanded(
+                            child: Container(
+                              color: Colors.black,
+                              child: KlineSingleView(type: 1),
                             ),
-                          ],
-                        ),
-                      );
-                  }
-                  )
-                  )
-                  ),
+                            flex: 4,
+                          ),
+                        ],
+                      ),
+                    );
+                  }))),
     );
+  }
+
+  _fling(int countX) {
+    final CurvedAnimation curve = CurvedAnimation(parent: controller, curve: Curves.easeOut);
+    animation = Tween<int>(begin: countX, end: 0).animate(curve);
+    listener = () {
+      if (animation.value == 0) return;
+      int num = countX;
+      if (isScale) {
+        _resetFlingAnim();
+        return;
+      }
+      if (klineBloc.stringList.length > 1) {
+        int currentIndex = klineBloc.currentIndex - num;
+        if (currentIndex < 0) {
+          _resetFlingAnim();
+          return;
+        }
+        if (currentIndex > klineBloc.stringList.length - count) {
+          _resetFlingAnim();
+          return;
+        }
+        klineBloc.getSubKlineList(currentIndex, currentIndex + count);
+        klineBloc.currentIndex = currentIndex;
+        offset = num;
+      }
+    };
+
+    animation.addListener(listener);
+
+    controller.forward(from: 0.0);
+  }
+  _resetFlingAnim() {
+    animation?.removeListener(listener);
+    controller?.reset();
   }
 }

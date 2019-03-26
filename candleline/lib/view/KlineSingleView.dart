@@ -5,7 +5,7 @@ import 'package:candleline/model/model.dart';
 import 'package:candleline/view/KlineCandleView.dart';
 import 'package:candleline/view/KlineColumnarView.dart';
 import 'package:candleline/view/KlineSolideView.dart';
-
+import 'package:candleline/view/KlineSeparateView.dart';
 class KlineSingleView extends StatelessWidget {
   KlineSingleView({
     Key key,
@@ -22,6 +22,7 @@ class KlineSingleView extends StatelessWidget {
           alignment: Alignment.center,
           fit: StackFit.expand,
           children: <Widget>[
+            KlineSeparateView(type: 0),
             KlineCandleView(),
             KlineSolideView(type: 0),
             KlineSolideView(type: 1),
@@ -36,6 +37,7 @@ class KlineSingleView extends StatelessWidget {
           alignment: Alignment.center,
           fit: StackFit.expand,
           children: <Widget>[
+            KlineSeparateView(type: 1),
             KlineColumnarView(),
 //                  KlineSolideView(),
           ],
@@ -44,3 +46,5 @@ class KlineSingleView extends StatelessWidget {
     }
   }
 }
+
+

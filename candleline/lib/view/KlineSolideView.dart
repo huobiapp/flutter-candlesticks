@@ -52,7 +52,7 @@ class _SolideViewPainter extends CustomPainter {
     if (min == null || max == null ) {
       return;
     }
-    double height = size.height;
+    double height = size.height - 20;
 
     final double heightNormalizer = height / (max - min);
 
@@ -75,21 +75,21 @@ class _SolideViewPainter extends CustomPainter {
       switch (type) {
         case 0:
           {
-            startY = height - (data[i].priceMa1 - min) * heightNormalizer;
-            endY = height - (data[i + 1].priceMa1 - min) * heightNormalizer;
+            startY = height - (data[i].priceMa1 - min) * heightNormalizer + 20;
+            endY = height - (data[i + 1].priceMa1 - min) * heightNormalizer + 20;
             break;
           }
         case 1:
           {
-            startY = height - (data[i].priceMa2 - min) * heightNormalizer;
-            endY = height - (data[i + 1].priceMa2 - min) * heightNormalizer;
+            startY = height - (data[i].priceMa2 - min) * heightNormalizer + 20;
+            endY = height - (data[i + 1].priceMa2 - min) * heightNormalizer + 20;
             lineColor = Colors.blue;
             break;
           }
         case 2:
           {
-            startY = height - (data[i].priceMa3 - min) * heightNormalizer;
-            endY = height - (data[i + 1].priceMa3 - min) * heightNormalizer;
+            startY = height - (data[i].priceMa3 - min) * heightNormalizer + 20;
+            endY = height - (data[i + 1].priceMa3 - min) * heightNormalizer + 20;
             lineColor = Colors.purple;
             break;
           }
