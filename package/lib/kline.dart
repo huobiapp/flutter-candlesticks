@@ -37,7 +37,7 @@ class KlinePage extends StatelessWidget {
               if (num == 0) {
                 return;
               }
-              print(num);
+              // print(num);
 
               if (bloc.stringList.length > 1) {
                 int currentIndex = bloc.currentIndex - num;

@@ -9,10 +9,16 @@ class MarketModel {
   double low;
   double close;
   double vol;
+  double amount;
+  double count;
+  @JsonKey(name: 'id')
+  int date;
 
   //不同的类使用不同的mixin即可
   factory MarketModel.fromJson(Map<String, dynamic> json) => _$MarketModelFromJson(json);
   Map<String, dynamic> toJson() => _$MarketModelToJson(this);
+  
+  //flutter packages pub run build_runner build
 }
 @JsonSerializable()
 class MarketData {

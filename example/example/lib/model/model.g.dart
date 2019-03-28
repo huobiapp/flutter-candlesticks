@@ -12,7 +12,10 @@ MarketModel _$MarketModelFromJson(Map<String, dynamic> json) {
       (json['high'] as num)?.toDouble(),
       (json['low'] as num)?.toDouble(),
       (json['close'] as num)?.toDouble(),
-      (json['vol'] as num)?.toDouble());
+      (json['vol'] as num)?.toDouble())
+    ..amount = (json['amount'] as num)?.toDouble()
+    ..count = (json['count'] as num)?.toDouble()
+    ..date = json['id'] as int;
 }
 
 Map<String, dynamic> _$MarketModelToJson(MarketModel instance) =>
@@ -21,7 +24,10 @@ Map<String, dynamic> _$MarketModelToJson(MarketModel instance) =>
       'high': instance.high,
       'low': instance.low,
       'close': instance.close,
-      'vol': instance.vol
+      'vol': instance.vol,
+      'amount': instance.amount,
+      'count': instance.count,
+      'id': instance.date
     };
 
 MarketData _$MarketDataFromJson(Map<String, dynamic> json) {

@@ -67,7 +67,8 @@ class KlinePageBloc extends KlineBloc {
             close: item.close,
             high: item.high,
             low: item.low,
-            vol: item.vol));
+            vol: item.amount,
+            date: item.date));
       }
       //数据返回后调用 updateDataList(list);
       this.updateDataList(list);
