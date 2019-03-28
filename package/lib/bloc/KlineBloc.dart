@@ -5,8 +5,8 @@ import 'package:candleline/manager/KlineDataCalculateManager.dart';
 import 'dart:math';
 import 'package:candleline/model/KlineData.dart';
 class KlineBloc extends BlocBase {
-  PublishSubject<List<Market>> _klineListController =
-      PublishSubject<List<Market>>();
+  BehaviorSubject<List<Market>> _klineListController =
+      BehaviorSubject<List<Market>>();
   PublishSubject<List<Market>> _klineCurrentListController =
       PublishSubject<List<Market>>();
 
@@ -33,7 +33,11 @@ class KlineBloc extends BlocBase {
   double volumeMax;
 
   KlineBloc() {
-    
+    initData();
+  }
+
+  void initData() {
+
   }
   @override
   void dispose() {

@@ -52,43 +52,43 @@ Future<String> loadAsset() async {
   return await rootBundle.loadString('json/market.json');
 }
 
-// class KlinePageDataSourceDef implements KlinePageDataSource {
-//   KlinePageDataSourceDef({Key key, @required List<MarketModel> dataList});
-//   List<MarketModel> dataList;
-//   @override
-//   List<KlineData> klineDataList() {
-//     List<KlineData> list = List<KlineData>();
-//     for (var item in this.dataList) {
-//       list.add(KlineData(
-//           open: item.open,
-//           close: item.close,
-//           high: item.high,
-//           low: item.low,
-//           vol: item.vol));
-//     }
-//     return list;
-//   }
-// }
-
-class _MyHomePageState extends State<MyHomePage> {
-  void _pushToKline() {
+class KlinePageBloc extends KlineBloc {
+  @override
+  //重写init方法
+  void initData() {
     Future<String> future = loadAsset();
     future.then((value) {
       final parseJson = json.decode(value);
       MarketData marketData = MarketData.fromJson(parseJson);
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        List<KlineData> list = List<KlineData>();
-        for (var item in marketData.data) {
-          list.add(KlineData(
-              open: item.open,
-              close: item.close,
-              high: item.high,
-              low: item.low,
-              vol: item.vol));
-        }
-        return KlinePage(data: list);
-      }));
+      List<KlineData> list = List<KlineData>();
+      for (var item in marketData.data) {
+        list.add(KlineData(
+            open: item.open,
+            close: item.close,
+            high: item.high,
+            low: item.low,
+            vol: item.vol));
+      }
+      //数据返回后调用 updateDataList(list);
+      this.updateDataList(list);
     });
+    super.initData();
+  }
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  void _pushToKline() {
+    KlinePageBloc bloc = KlinePageBloc();
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Scaffold(
+          appBar: AppBar(
+            title: Text('klineDemo'),
+          ),
+          body: Container(
+            margin: EdgeInsets.only(top: 10, bottom: 20),
+            child: KlinePage(bloc: bloc))
+          );
+    }));
   }
 
   @override
