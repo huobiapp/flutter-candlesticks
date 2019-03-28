@@ -1,9 +1,9 @@
-import 'package:rxdart/rxdart.dart';
-import 'package:candleline/common/BlocProvider.dart';
-import 'package:candleline/model/KlineModel.dart';
-import 'package:candleline/manager/KlineDataCalculateManager.dart';
 import 'dart:math';
-import 'package:candleline/model/KlineData.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:candleline/common/bloc_provider.dart';
+import 'package:candleline/model/kline_model.dart';
+import 'package:candleline/manager/kline_data_calculate_manager.dart';
+import 'package:candleline/model/kline_data.dart';
 class KlineBloc extends BlocBase {
   BehaviorSubject<List<Market>> _klineListController =
       BehaviorSubject<List<Market>>();

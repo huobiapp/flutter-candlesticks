@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:candleline/bloc/KlineBloc.dart';
-import 'package:candleline/common/BlocProvider.dart';
-import 'package:candleline/model/KlineModel.dart';
-import 'package:candleline/view/KlineSingleView.dart';
+import 'package:candleline/bloc/kline_bloc.dart';
+import 'package:candleline/common/bloc_provider.dart';
+import 'package:candleline/model/kline_model.dart';
+import 'package:candleline/view/kline_single_view.dart';
 
 class KlinePage extends StatelessWidget {
   KlinePage({Key key, @required this.bloc}) : super(key: key);

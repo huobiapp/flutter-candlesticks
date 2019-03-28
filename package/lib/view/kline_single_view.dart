@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:candleline/bloc/KlineBloc.dart';
-import 'package:candleline/common/BlocProvider.dart';
-import 'package:candleline/model/KlineModel.dart';
-import 'package:candleline/view/KlineCandleView.dart';
-import 'package:candleline/view/KlineColumnarView.dart';
-import 'package:candleline/view/KlineSolideView.dart';
-import 'package:candleline/view/KlineSeparateView.dart';
+import 'package:candleline/view/kline_candle_view.dart';
+import 'package:candleline/view/kline_columnar_view.dart';
+import 'package:candleline/view/kline_solide_view.dart';
+import 'package:candleline/view/kline_separate_view.dart';
 class KlineSingleView extends StatelessWidget {
   KlineSingleView({
     Key key,

@@ -1,41 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:candleline/bloc/KlineBloc.dart';
-import 'package:candleline/common/BlocProvider.dart';
-import 'package:candleline/model/KlineModel.dart';
+import 'package:candleline/bloc/kline_bloc.dart';
+import 'package:candleline/common/bloc_provider.dart';
+import 'package:candleline/model/kline_model.dart';
 import 'package:flutter/foundation.dart';
 
-class KlineCandleView extends StatelessWidget {
-
+class KlineColumnarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    KlineBloc  klineBloc = BlocProvider.of<KlineBloc>(context);
+    KlineBloc klineBloc = BlocProvider.of<KlineBloc>(context);
     return StreamBuilder(
         stream: klineBloc.outCurrentKlineList,
         builder:
             (BuildContext context, AsyncSnapshot<List<Market>> snapshot) {
-          List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0)];          
+          List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0)];
           return CustomPaint(
               size: Size.infinite,
-              painter: _CandleViewPainter(
+              painter: _ColumnarViewPainter(
                   data:tmpList,
                   lineWidth: 1,
+                  max: klineBloc.volumeMax,
                   rectWidth: klineBloc.rectWidth,
                   increaseColor: Colors.red,
-                  decreaseColor: Colors.green,
-                  max: klineBloc.priceMax,
-                  min: klineBloc.priceMin
+                  decreaseColor: Colors.green
               )
           );
         });
   }
 }
 
-class _CandleViewPainter extends CustomPainter {
-  _CandleViewPainter({
+class _ColumnarViewPainter extends CustomPainter {
+  _ColumnarViewPainter({
     Key key,
     @required this.data,
     @required this.max,
-    @required this.min,
     this.lineWidth = 1.0,
     this.rectWidth = 7.0,
     this.increaseColor = Colors.red,
@@ -47,19 +44,16 @@ class _CandleViewPainter extends CustomPainter {
   final double rectWidth;
   final Color increaseColor;
   final Color decreaseColor;
-  final double min;
   final double max;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (min == null || max == null ) {
+    if (max == null ) {
       return;
     }
-
-    double width = size.width;
     double height = size.height - 20;
 
-    final double heightNormalizer = height / (max - min);
+    final double heightNormalizer = height / (max);
 
     double rectLeft;
     double rectTop;
@@ -83,28 +77,17 @@ class _CandleViewPainter extends CustomPainter {
       }
 
       // Draw candlestick if decrease
-      rectTop = height - (data[i].open - min) * heightNormalizer + 20;
-      rectBottom = height - (data[i].close - min) * heightNormalizer + 20;
+      rectTop = height - (data[i].volumeto) * heightNormalizer + 20;
+      rectBottom = height + 20;
       Rect ocRect =
       new Rect.fromLTRB(rectLeft, rectTop, rectRight, rectBottom);
       canvas.drawRect(ocRect, rectPaint);
 
-      // Draw low/high candlestick wicks
-      double low = height - (data[i].low - min) * heightNormalizer + 20;
-      double high = height - (data[i].high - min) * heightNormalizer + 20;
-      canvas.drawLine(
-          new Offset(rectLeft + rectWidth / 2 - lineWidth / 2, rectBottom),
-          new Offset(rectLeft + rectWidth / 2 - lineWidth / 2, low),
-          rectPaint);
-      canvas.drawLine(
-          new Offset(rectLeft + rectWidth / 2 - lineWidth / 2, rectTop),
-          new Offset(rectLeft + rectWidth / 2 - lineWidth / 2, high),
-          rectPaint);
     }
   }
 
   @override
-  bool shouldRepaint(_CandleViewPainter old) {
+  bool shouldRepaint(_ColumnarViewPainter old) {
     return data != null;
   }
 

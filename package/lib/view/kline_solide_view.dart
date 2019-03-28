@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:candleline/bloc/KlineBloc.dart';
-import 'package:candleline/common/BlocProvider.dart';
-import 'package:candleline/model/KlineModel.dart';
+import 'package:candleline/bloc/kline_bloc.dart';
+import 'package:candleline/common/bloc_provider.dart';
+import 'package:candleline/model/kline_model.dart';
 import 'package:flutter/foundation.dart';
 
 class KlineSolideView extends StatelessWidget {
