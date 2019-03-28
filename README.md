@@ -1,4 +1,4 @@
-# candleline
+# flutter-candlesticks
 ## 基于Flutter实现k线功能
 
 ### 目前为测试版本，功能还在完善中
