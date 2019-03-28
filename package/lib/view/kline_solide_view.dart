@@ -13,7 +13,7 @@ class KlineSolideView extends StatelessWidget {
     return StreamBuilder(
         stream: klineBloc.outCurrentKlineList,
         builder: (BuildContext context, AsyncSnapshot<List<Market>> snapshot) {
-          List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0)];
+          List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0, 0)];
           return CustomPaint(
               size: Size.infinite,
               painter: _SolideViewPainter(
@@ -52,7 +52,7 @@ class _SolideViewPainter extends CustomPainter {
     if (min == null || max == null ) {
       return;
     }
-    double height = size.height - 20;
+    double height = size.height - 20 - 20;
 
     final double heightNormalizer = height / (max - min);
 

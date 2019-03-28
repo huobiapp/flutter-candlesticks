@@ -103,12 +103,6 @@ class KlinePage extends StatelessWidget {
                         Expanded(
                           child: Container(
                             color: Colors.black,
-                          ),
-                          flex: 1,
-                        ),
-                        Expanded(
-                          child: Container(
-                            color: Colors.black,
                             child: KlineSingleView(type: 1),
                           ),
                           flex: 4,

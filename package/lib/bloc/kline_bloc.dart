@@ -48,7 +48,7 @@ class KlineBloc extends BlocBase {
     if (dataList != null && dataList.length > 0) {
       stringList.clear();
       for (var item in dataList) {
-        Market data = Market(item.open, item.high, item.low, item.close, item.vol);
+        Market data = Market(item.open, item.high, item.low, item.close, item.vol, item.date);
         stringList.add(data);
       }
       //计算Ma均线

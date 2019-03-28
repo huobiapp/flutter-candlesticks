@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Market{
-  Market(this.open, this.high, this.low, this.close, this.volumeto);
+  Market(this.open, this.high, this.low, this.close, this.volumeto, this.date);
   double open;
   double high;
   double low;
   double close;
   double volumeto;
+  int date;
 
   //指标线数据
   double priceMa1;

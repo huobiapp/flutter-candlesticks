@@ -3,6 +3,7 @@ import 'package:candleline/bloc/kline_bloc.dart';
 import 'package:candleline/common/bloc_provider.dart';
 import 'package:candleline/model/kline_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
 class KlineSeparateView extends StatelessWidget {
   KlineSeparateView({Key key, @required this.type});
@@ -14,7 +15,7 @@ class KlineSeparateView extends StatelessWidget {
     return StreamBuilder(
         stream: klineBloc.outCurrentKlineList,
         builder: (BuildContext context, AsyncSnapshot<List<Market>> snapshot) {
-          List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0)];
+          List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0, 0)];
           return CustomPaint(
               size: Size.infinite,
               painter: _SeparateViewPainter(
@@ -73,13 +74,13 @@ class _SeparateViewPainter extends CustomPainter {
             text: text,
             style: new TextStyle(
                 color: lineColor, fontSize: 10.0, fontWeight: FontWeight.normal)),
-        textDirection: TextDirection.ltr);
+        textDirection: TextDirection.rtl);
     textPainter.layout();
     textPainter.paint(canvas, offset);
   }
 
   drawPriceLine(Canvas canvas, Size size) {
-    double height = size.height - 20;
+    double height = size.height - 20 - 20;
     double width = size.width;
 
     Paint linePaint = Paint()
@@ -102,9 +103,10 @@ class _SeparateViewPainter extends CustomPainter {
 
     //绘制竖线
     for (var i = 1; i < 4; i++) {
-          canvas.drawLine(Offset((i * count + 0.5) * rectWidth ,0), Offset((i * count + 0.5) * rectWidth,height + 20), linePaint);
+          canvas.drawLine(Offset((i * count - 0.5) * rectWidth ,0), Offset((i * count - 0.5) * rectWidth,height + 20), linePaint);
     }
-    
+
+    //绘制价格
     double priceOffset = (max - min) / 4;
     double origin = width - max.toStringAsPrecision(7).length * 6;
     drawText(canvas, Offset(origin, 20), max.toStringAsPrecision(7));
@@ -113,6 +115,25 @@ class _SeparateViewPainter extends CustomPainter {
     drawText(canvas, Offset(origin, heightOffset * 3 - 12 + 20), (min + priceOffset).toStringAsPrecision(7));
     drawText(canvas, Offset(origin, height - 12 + 20), min.toStringAsPrecision(7));
 
+    //绘制时间
+    for (var i = 0; i < 5; i++) {
+      int timestamp;
+      Offset dateOrigin;
+      if (i == 0) {
+        timestamp = data[0].date;
+        dateOrigin = Offset(0, height+20);
+      } else if (i == 4) {
+        timestamp = data.last.date;
+        dateOrigin = Offset(width - 30, height+20);
+      } else {
+        timestamp = data[i*count].date;
+        dateOrigin = Offset((i * count - 0.5) * rectWidth - 15, height+20);
+      }
+      var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+      var dateFormatter = DateFormat('HH:mm');
+      String dateString = dateFormatter.format(date);
+      drawText(canvas, dateOrigin, dateString);
+    }
   }
 
   drawVolumeLine(Canvas canvas, Size size) {
@@ -130,7 +151,7 @@ class _SeparateViewPainter extends CustomPainter {
 
     //绘制竖线
     for (var i = 1; i < 4; i++) {
-          canvas.drawLine(Offset((i * count + 0.5) * rectWidth ,20), Offset((i * count + 0.5) * rectWidth,height + 20), linePaint);
+          canvas.drawLine(Offset((i * count - 0.5) * rectWidth ,20), Offset((i * count - 0.5) * rectWidth,height + 20), linePaint);
     }
     
     double origin = width - max.toStringAsPrecision(7).length * 6;

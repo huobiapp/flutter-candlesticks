@@ -13,7 +13,7 @@ class KlineCandleView extends StatelessWidget {
         stream: klineBloc.outCurrentKlineList,
         builder:
             (BuildContext context, AsyncSnapshot<List<Market>> snapshot) {
-          List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0)];          
+          List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0, 0)];          
           return CustomPaint(
               size: Size.infinite,
               painter: _CandleViewPainter(
@@ -57,7 +57,7 @@ class _CandleViewPainter extends CustomPainter {
     }
 
     double width = size.width;
-    double height = size.height - 20;
+    double height = size.height - 20 - 20;
 
     final double heightNormalizer = height / (max - min);
 
