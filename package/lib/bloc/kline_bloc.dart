@@ -61,7 +61,10 @@ class KlineBloc extends BlocBase {
     screenWidth = width;
     double count = screenWidth / rectWidth;
     int num = count.toInt();
-    getSubKlineList(0, num);
+    if (stringList.length - num > 0) {
+      currentIndex = stringList.length - num;
+      getSubKlineList(stringList.length - num, stringList.length);
+    }
   }
 
   void getSubKlineList(int from, int to) {
