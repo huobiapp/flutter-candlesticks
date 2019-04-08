@@ -42,6 +42,7 @@ class KlineBloc extends BlocBase {
   @override
   void dispose() {
     _klineListController.close();
+    _klineCurrentListController.close();
   }
 
   void updateDataList(List<KlineData> dataList) {
