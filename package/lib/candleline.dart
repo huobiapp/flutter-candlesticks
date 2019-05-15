@@ -12,3 +12,4 @@ export 'view/kline_single_view.dart';
 export 'view/kline_solide_view.dart';
 export 'view/kline_view.dart';
 
+

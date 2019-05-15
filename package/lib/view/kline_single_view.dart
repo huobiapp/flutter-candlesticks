@@ -3,6 +3,7 @@ import 'package:candleline/view/kline_candle_view.dart';
 import 'package:candleline/view/kline_columnar_view.dart';
 import 'package:candleline/view/kline_solide_view.dart';
 import 'package:candleline/view/kline_separate_view.dart';
+import 'package:candleline/view/kline_area_view.dart';
 class KlineSingleView extends StatelessWidget {
   KlineSingleView({
     Key key,
