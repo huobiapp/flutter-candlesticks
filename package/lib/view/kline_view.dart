@@ -3,6 +3,7 @@ import 'package:candleline/bloc/kline_bloc.dart';
 import 'package:candleline/common/bloc_provider.dart';
 import 'package:candleline/model/kline_model.dart';
 import 'package:candleline/view/kline_single_view.dart';
+
 class KlinePage extends StatelessWidget {
   KlinePage({Key key, @required this.bloc}) : super(key: key);
   final KlineBloc bloc;
@@ -112,3 +113,5 @@ class KlinePage extends StatelessWidget {
                 })));
   }
 }
+
+

@@ -17,11 +17,11 @@ class KlineAreaView extends StatelessWidget {
               size: Size.infinite,
               painter: _AreaViewPainter(
                 data: tmpList,
-                lineWidth: 1,
+                lineWidth: 2,
                 max: klineBloc.priceMax,
                 min: klineBloc.priceMin,
                 rectWidth: klineBloc.rectWidth,
-                lineColor: Colors.yellow,
+                lineColor: Colors.blue,
               ));
         });
   }
@@ -57,65 +57,54 @@ class _AreaViewPainter extends CustomPainter {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.blue,
+            Colors.blue.withAlpha(100),
             Colors.blue.withAlpha(20),
           ],
         );
     Rect screenRect = Rect.fromLTWH(0, 20, size.width, height);
 
+    Paint fillPaint = new Paint()
+      ..color = lineColor
+      ..shader = gradient.createShader(screenRect)
+      ..style = PaintingStyle.fill;
     Paint linePaint = new Paint()
       ..color = lineColor
       ..strokeWidth = lineWidth
-      ..shader = gradient.createShader(screenRect);
+      ..strokeJoin = StrokeJoin.round
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
     double beginX = ((0.5) * rectWidth) - lineWidth / 2;
     double beginY = height + 20;
 
-  
     Path path = new Path()..moveTo(beginX, beginY);
-    // double startX;
-    // double startY;
-    // double endX;
-    // double endY;
-    // startX = ((3 + 0.5) * rectWidth) - lineWidth / 2;
-    // endX = ((3 + 1 + 0.5) * rectWidth) - lineWidth / 2;
-
-    // startY = height - (data[3].close - min) * heightNormalizer + 20;
-    // endY = height - (data[3 + 1].close - min) * heightNormalizer + 20;
-
-    // path.lineTo(startX, startY);
-    // path.lineTo(endX, endY);
-
-    // canvas.drawPath(path, linePaint);
-    // print(startX);
-    //   print(startY);
-    // return;
+    Path linePath = new Path();
 
     for (int i = 0; i < data.length; i++) {
-      int startX;
-      int startY;
-      int endX;
-      int endY;
+      double startX;
+      double startY;
+      double endX;
+      double endY;
       if (i == data.length - 1) {
-        startX = (((i + 0.5) * rectWidth) - lineWidth / 2).toInt();
-        path.lineTo(startX.toDouble(), beginY.toDouble());
+        startX = ((i + 0.5) * rectWidth) - lineWidth / 2;
+        path.lineTo(startX, beginY);
         break;
       }
-      startX = (((i + 0.5) * rectWidth) - lineWidth / 2).toInt();
-      endX = (((i + 1 + 0.5) * rectWidth) - lineWidth / 2).toInt();
+      startX = ((i + 0.5) * rectWidth) - lineWidth / 2;
+      endX = ((i + 1 + 0.5) * rectWidth) - lineWidth / 2;
 
-      startY = (height - (data[i].close - min) * heightNormalizer + 20).toInt();
-      endY = (height - (data[i + 1].close - min) * heightNormalizer + 20).toInt();
-      print(endX);
-      print(endY);
+      startY = height - (data[i].close - min) * heightNormalizer + 20;
+      endY = height - (data[i + 1].close - min) * heightNormalizer + 20;
       
       if (i == 0) {
-        path.lineTo(startX.toDouble(), startY.toDouble());
-        print(startX);
-        print(startY);
+        path.lineTo(startX, startY);
+        linePath.moveTo(startX, startY);
       }
-      path.lineTo(endX.toDouble(), endY.toDouble());
+      path.lineTo(endX, endY);
+      linePath.lineTo(endX, endY);
+
     }
-    canvas.drawPath(path, linePaint);
+    canvas.drawPath(path, fillPaint);
+    canvas.drawPath(linePath, linePaint);
   }
 
   @override

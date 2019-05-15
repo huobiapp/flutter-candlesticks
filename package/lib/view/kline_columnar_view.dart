@@ -5,6 +5,8 @@ import 'package:candleline/model/kline_model.dart';
 import 'package:flutter/foundation.dart';
 
 class KlineColumnarView extends StatelessWidget {
+  KlineColumnarView({Key key, @required this.type});
+  final int type; //0 default,1 realtime
   @override
   Widget build(BuildContext context) {
     KlineBloc klineBloc = BlocProvider.of<KlineBloc>(context);
@@ -13,6 +15,15 @@ class KlineColumnarView extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<List<Market>> snapshot) {
           List<Market> tmpList = snapshot.data ?? [Market(0, 0, 0, 0, 0, 0)];
+          Color increaseColor;
+          Color decreaseColor;
+          if (type == 0) {
+            increaseColor = Colors.red;
+            decreaseColor = Colors.green;
+          } else {
+            increaseColor = Colors.blue;
+            decreaseColor = Colors.blue;
+          }
           return CustomPaint(
               size: Size.infinite,
               painter: _ColumnarViewPainter(
@@ -20,8 +31,8 @@ class KlineColumnarView extends StatelessWidget {
                   lineWidth: 1,
                   max: klineBloc.volumeMax,
                   rectWidth: klineBloc.rectWidth,
-                  increaseColor: Colors.red,
-                  decreaseColor: Colors.green
+                  increaseColor: increaseColor,
+                  decreaseColor: decreaseColor
               )
           );
         });

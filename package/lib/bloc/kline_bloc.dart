@@ -7,8 +7,10 @@ import 'package:candleline/model/kline_data.dart';
 class KlineBloc extends BlocBase {
   BehaviorSubject<List<Market>> _klineListController =
       BehaviorSubject<List<Market>>();
-  PublishSubject<List<Market>> _klineCurrentListController =
-      PublishSubject<List<Market>>();
+  BehaviorSubject<List<Market>> _klineCurrentListController =
+      BehaviorSubject<List<Market>>();
+  PublishSubject<bool> _klineRealTimeOpenController =
+      PublishSubject<bool>();
 
   Sink<List<Market>> get _inklineList => _klineListController.sink;
   Stream<List<Market>> get outklineList => _klineListController.stream;
@@ -18,8 +20,12 @@ class KlineBloc extends BlocBase {
   Stream<List<Market>> get outCurrentKlineList =>
       _klineCurrentListController.stream;
 
+  Sink<bool> get _inRealTimeOpen => _klineRealTimeOpenController.sink;
+  Stream<bool> get outRealTimeOpen => _klineRealTimeOpenController.stream; 
+
   List<Market> klineList = List();
   List<Market> stringList = List();
+  bool realTimeOpen = false;
 
   //当前k线滑到的位置
   int currentIndex = 0;
@@ -43,6 +49,7 @@ class KlineBloc extends BlocBase {
   void dispose() {
     _klineListController.close();
     _klineCurrentListController.close();
+    _klineRealTimeOpenController.close();
   }
 
   void updateDataList(List<KlineData> dataList) {
@@ -56,6 +63,10 @@ class KlineBloc extends BlocBase {
       stringList = KlineDataCalculateManager.calculateKlineData(ChartType.MA, stringList);
       _inklineList.add(stringList);
     }
+  }
+  void openRealTime(bool isOpen) {
+    realTimeOpen = isOpen;
+    _inRealTimeOpen.add(isOpen);
   }
 
   void setScreenWith(double width) {

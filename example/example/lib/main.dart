@@ -78,18 +78,57 @@ class KlinePageBloc extends KlineBloc {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  KlinePageBloc bloc;
   void _pushToKline() {
-    KlinePageBloc bloc = KlinePageBloc();
+    bloc = KlinePageBloc();
     Navigator.push(context, MaterialPageRoute(builder: (context) {
+      double height = MediaQuery.of(context).size.height;
       return Scaffold(
-          appBar: AppBar(
-            title: Text('klineDemo'),
-          ),
-          body: Container(
-            margin: EdgeInsets.only(top: 10, bottom: 20),
-            child: KlinePage(bloc: bloc))
-          );
+        appBar: AppBar(
+          title: Text('klineDemo'),
+        ),
+        body: Column(
+          children: <Widget>[
+            Container(
+              height: height - 200,
+              child: KlinePage(bloc: bloc),
+            ),
+            Container(
+                height: 100,
+                margin: EdgeInsets.only(left: 20,right: 20),
+                child: Row(
+                  children: <Widget>[
+                    FlatButton(
+                      textColor: Colors.white,
+                      color: Colors.blue,
+                      child: Text("分时图"),
+                      onPressed: _changeToTimeView,
+                    ),
+                    Padding (
+                      padding: EdgeInsets.only(left: 10),
+                      child: FlatButton(
+                      textColor: Colors.white,
+                      color: Colors.blue,
+                      child: Text("蜡烛图"),
+                      onPressed: _changeToCandleView,
+                    ),
+                    )
+                  ],
+                )),
+          ],
+        ),
+      );
     }));
+  }
+
+  void _changeToTimeView() {
+    print('分时图');
+    bloc.openRealTime(true);
+
+  }
+  void _changeToCandleView() {
+    print('蜡烛图');
+    bloc.openRealTime(false);
   }
 
   @override
