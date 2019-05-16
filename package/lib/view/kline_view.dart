@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:candleline/bloc/kline_bloc.dart';
 import 'package:candleline/common/bloc_provider.dart';
@@ -15,13 +16,13 @@ class KlinePage extends StatelessWidget {
     int count;
     double currentRectWidth;
     bool isScale = false;
-    ScrollController _controller = new ScrollController();
+    ScrollController _controller = ScrollController(initialScrollOffset: bloc.rectWidth * bloc.stringList.length-bloc.screenWidth); 
     _controller.addListener(() {
       print(_controller.offset); //打印滚动位置
       int currentIndex = (_controller.offset ~/ bloc.rectWidth).toInt();
-      if(currentIndex < 0) {
+      if (currentIndex < 0) {
         return;
-      }else if(currentIndex > bloc.stringList.length - count) {
+      } else if (currentIndex > bloc.stringList.length - count) {
         return;
       }
       bloc.currentIndex = currentIndex;
@@ -62,6 +63,7 @@ class KlinePage extends StatelessWidget {
                     double width = MediaQuery.of(context).size.width;
                     count = (width ~/ bloc.rectWidth).toInt();
                     bloc.setScreenWith(width);
+                    // _controller = ScrollController(initialScrollOffset: bloc.rectWidth * bloc.stringList.length-bloc.screenWidth);
                   }
                   return Container(
                     child: Stack(
@@ -88,12 +90,12 @@ class KlinePage extends StatelessWidget {
                         ),
                         Scrollbar(
                             child: SingleChildScrollView(
-                          child: Container(
-                            width: bloc.rectWidth * data.length,
-                          ),
-                          controller: _controller,
-                          scrollDirection: Axis.horizontal,
-                        )),
+                                child: Container(
+                                  width: bloc.rectWidth * data.length,
+                                ),
+                                controller: _controller,
+                                scrollDirection: Axis.horizontal,
+                                )),
                       ],
                     ),
                   );
