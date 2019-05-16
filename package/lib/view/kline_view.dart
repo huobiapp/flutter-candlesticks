@@ -15,51 +15,23 @@ class KlinePage extends StatelessWidget {
     int count;
     double currentRectWidth;
     bool isScale = false;
+    ScrollController _controller = new ScrollController();
+    _controller.addListener(() {
+      print(_controller.offset); //打印滚动位置
+      int currentIndex = (_controller.offset ~/ bloc.rectWidth).toInt();
+      if(currentIndex < 0) {
+        return;
+      }else if(currentIndex > bloc.stringList.length - count) {
+        return;
+      }
+      bloc.currentIndex = currentIndex;
+      bloc.getSubKlineList(currentIndex, currentIndex + count);
+    });
 
     return BlocProvider<KlineBloc>(
         //key: PageStorageKey('market'),
         bloc: bloc,
         child: GestureDetector(
-            //开始拖动
-            onHorizontalDragStart: (details) {
-              lastPoint = details.globalPosition;
-              count =
-                  (MediaQuery.of(context).size.width ~/ bloc.rectWidth).toInt();
-            },
-            //结束拖动
-            onHorizontalDragUpdate: (details) {
-              double offsetX = details.globalPosition.dx - lastPoint.dx;
-              int num = (offsetX ~/ bloc.rectWidth).toInt();
-//            print(details.globalPosition.dx - lastPoint.dx);
-              if (isScale /*|| num == offset*/) {
-                return;
-              }
-              if (num == 0) {
-                return;
-              }
-              // print(num);
-
-              if (bloc.stringList.length > 1) {
-                int currentIndex = bloc.currentIndex - num;
-                if (currentIndex < 0) {
-                  return;
-                }
-                if (currentIndex > bloc.stringList.length - count) {
-                  return;
-                }
-                lastPoint = details.globalPosition;
-                bloc.getSubKlineList(currentIndex, currentIndex + count);
-                bloc.currentIndex = currentIndex;
-                offset = num;
-              }
-            },
-            onHorizontalDragEnd: (details) {
-              // if(offset > 0) {
-              //   _fling(4);
-              // } else {
-              //   _fling(-4);
-              // }
-            },
             onScaleStart: (details) {
               currentRectWidth = bloc.rectWidth;
               isScale = true;
@@ -88,30 +60,43 @@ class KlinePage extends StatelessWidget {
                   List<Market> data = snapshot.data;
                   if (data != null) {
                     double width = MediaQuery.of(context).size.width;
+                    count = (width ~/ bloc.rectWidth).toInt();
                     bloc.setScreenWith(width);
                   }
                   return Container(
-                    child: Column(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      fit: StackFit.expand,
                       children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            color: Colors.black,
-                            child: KlineSingleView(type: 0),
-                          ),
-                          flex: 20,
+                        Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                color: Colors.black,
+                                child: KlineSingleView(type: 0),
+                              ),
+                              flex: 20,
+                            ),
+                            Expanded(
+                              child: Container(
+                                color: Colors.black,
+                                child: KlineSingleView(type: 1),
+                              ),
+                              flex: 4,
+                            ),
+                          ],
                         ),
-                        Expanded(
+                        Scrollbar(
+                            child: SingleChildScrollView(
                           child: Container(
-                            color: Colors.black,
-                            child: KlineSingleView(type: 1),
+                            width: bloc.rectWidth * data.length,
                           ),
-                          flex: 4,
-                        ),
+                          controller: _controller,
+                          scrollDirection: Axis.horizontal,
+                        )),
                       ],
                     ),
                   );
                 })));
   }
 }
-
-
