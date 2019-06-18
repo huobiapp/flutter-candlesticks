@@ -16,7 +16,7 @@ class KlinePage extends StatelessWidget {
     int count;
     double currentRectWidth;
     bool isScale = false;
-    ScrollController _controller = ScrollController(initialScrollOffset: bloc.rectWidth * bloc.stringList.length-bloc.screenWidth); 
+    ScrollController _controller = ScrollController(initialScrollOffset: bloc.rectWidth * bloc.stringList.length-bloc.screenWidth);
     _controller.addListener(() {
       print(_controller.offset); //打印滚动位置
       int currentIndex = (_controller.offset ~/ bloc.rectWidth).toInt();
@@ -63,7 +63,7 @@ class KlinePage extends StatelessWidget {
                     double width = MediaQuery.of(context).size.width;
                     count = (width ~/ bloc.rectWidth).toInt();
                     bloc.setScreenWith(width);
-                    // _controller = ScrollController(initialScrollOffset: bloc.rectWidth * bloc.stringList.length-bloc.screenWidth);
+                    _controller.jumpTo(bloc.rectWidth * bloc.stringList.length-bloc.screenWidth);
                   }
                   return Container(
                     child: Stack(
