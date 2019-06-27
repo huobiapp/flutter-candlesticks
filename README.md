@@ -1,10 +1,13 @@
-# candleline
+# flutter-candlesticks
 ## 基于Flutter实现k线功能
 
 ### 目前为测试版本，功能还在完善中
 
 ### 版本号
 v0.1.0
+
+### demo示例
+![gif](https://github.com/huobiapp/flutter-candlesticks/blob/master/gifhome_640x1385_18s%20(1).gif)
 
 ### 主要功能
 * K线蜡烛图,交易量柱状图,MA5,MA10,MA30
