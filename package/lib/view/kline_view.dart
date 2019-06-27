@@ -63,7 +63,7 @@ class KlinePage extends StatelessWidget {
                     double width = MediaQuery.of(context).size.width;
                     count = (width ~/ bloc.rectWidth).toInt();
                     bloc.setScreenWith(width);
-                    _controller.jumpTo(bloc.rectWidth * bloc.stringList.length-bloc.screenWidth);
+                    // _controller.jumpTo(bloc.rectWidth * bloc.stringList.length-bloc.screenWidth);
                   }
                   return Container(
                     child: Stack(
